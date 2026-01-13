@@ -1,13 +1,19 @@
+import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { PostComposer } from '@/components/posts/PostComposer';
 import { PostList } from '@/components/posts/PostList';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { LogOut } from 'lucide-react';
-// import {Calendar, FileText } from 'lucide-react'
+// import { LogCalendar, FileTextOut,  } from 'lucide-react';
 
 export default function DashboardPage() {
     const { user, logout } = useAuth();
+    const [refreshTrigger, setRefreshTrigger] = React.useState(0);
+
+    const handlePostCreated = () => {
+        setRefreshTrigger(prev => prev + 1);
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -72,7 +78,7 @@ export default function DashboardPage() {
                 {/* Post Composer and List */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div>
-                        <PostComposer />
+                        <PostComposer onPostCreated={handlePostCreated} />
                     </div>
                     <div>
                         <Card>
@@ -81,7 +87,7 @@ export default function DashboardPage() {
                                 <CardDescription>Manage your scheduled and published posts</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <PostList />
+                                <PostList refreshTrigger={refreshTrigger} />
                             </CardContent>
                         </Card>
                     </div>
